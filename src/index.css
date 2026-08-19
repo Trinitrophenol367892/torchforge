@@ -1,1 +1,173 @@
 @import "tailwindcss";
+
+@theme {
+  --font-display: "Space Grotesk", sans-serif;
+  --font-body: "IBM Plex Sans", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  --color-ink: #0b101a;
+  --color-deep: #0e1522;
+  --color-panel: #121b2b;
+  --color-panel2: #0f1725;
+  --color-raise: #182337;
+  --color-line: #22314a;
+  --color-linesoft: #1a2740;
+  --color-frost: #e9f0fa;
+  --color-mist: #93a5bd;
+  --color-faint: #5d7089;
+
+  --color-amber: #ffb454;
+  --color-ember: #ff8a3d;
+  --color-aqua: #4fe0cd;
+  --color-sea: #2fbfae;
+  --color-rose: #ff7a8f;
+  --color-sky: #6fb1ff;
+  --color-lime: #a8e05f;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--color-ink);
+  color: var(--color-frost);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: rgba(255, 180, 84, 0.28);
+  color: #fff2dd;
+}
+
+/* ---------- scrollbars ---------- */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #2b3d5c transparent;
+}
+*::-webkit-scrollbar { width: 8px; height: 8px; }
+*::-webkit-scrollbar-thumb { background: #2b3d5c; border-radius: 8px; }
+*::-webkit-scrollbar-track { background: transparent; }
+
+/* ---------- ambient background layers ---------- */
+.ambient-base {
+  background:
+    radial-gradient(1100px 700px at 12% -8%, rgba(47, 191, 174, 0.11), transparent 62%),
+    radial-gradient(950px 640px at 108% 18%, rgba(255, 138, 61, 0.09), transparent 60%),
+    radial-gradient(800px 700px at 50% 120%, rgba(111, 177, 255, 0.07), transparent 60%),
+    var(--color-ink);
+}
+.ambient-grid {
+  background-image:
+    linear-gradient(rgba(111, 177, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(111, 177, 255, 0.045) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(1200px 800px at 50% 0%, black 30%, transparent 85%);
+  -webkit-mask-image: radial-gradient(1200px 800px at 50% 0%, black 30%, transparent 85%);
+}
+.ambient-noise {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+}
+.scanbeam {
+  background: linear-gradient(180deg, transparent, rgba(79, 224, 205, 0.05) 45%, rgba(79, 224, 205, 0.12) 50%, rgba(79, 224, 205, 0.05) 55%, transparent);
+  animation: beam 11s linear infinite;
+}
+@keyframes beam {
+  0% { transform: translateY(-30vh); }
+  100% { transform: translateY(120vh); }
+}
+
+/* ---------- motion ---------- */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.rise { animation: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.rise-1 { animation-delay: 0.05s; }
+.rise-2 { animation-delay: 0.12s; }
+.rise-3 { animation-delay: 0.19s; }
+
+@keyframes blinkc { 0%, 55% { opacity: 1; } 56%, 100% { opacity: 0; } }
+.caret-blink { animation: blinkc 1s steps(1) infinite; }
+
+@keyframes pulse-dot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.7); opacity: 0.55; }
+}
+.pulse-dot { animation: pulse-dot 1.4s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+
+@keyframes spin-slow { to { transform: rotate(360deg); } }
+.spin-slow { animation: spin-slow 2.4s linear infinite; }
+
+@keyframes flicker-in {
+  0% { opacity: 0; }
+  30% { opacity: 0.9; }
+  45% { opacity: 0.35; }
+  100% { opacity: 1; }
+}
+.flicker-in { animation: flicker-in 0.45s ease-out both; }
+
+@keyframes meter-wave {
+  0% { transform: scaleY(0.35); }
+  50% { transform: scaleY(1); }
+  100% { transform: scaleY(0.5); }
+}
+.meter-bar { animation: meter-wave 0.9s ease-in-out infinite; transform-origin: bottom; }
+
+/* ---------- controls ---------- */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--color-amber) var(--fill, 50%), #24344f var(--fill, 50%));
+  outline: none;
+  cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: #0e1522;
+  border: 2.5px solid var(--color-amber);
+  box-shadow: 0 0 0 4px rgba(255, 180, 84, 0.15), 0 2px 10px rgba(0,0,0,0.5);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); box-shadow: 0 0 0 7px rgba(255,180,84,0.2), 0 2px 12px rgba(0,0,0,0.6); }
+input[type="range"]::-moz-range-thumb {
+  width: 16px; height: 16px; border-radius: 50%;
+  background: #0e1522; border: 2.5px solid var(--color-amber);
+}
+input[type="range"].aqua { background: linear-gradient(90deg, var(--color-aqua) var(--fill, 50%), #24344f var(--fill, 50%)); }
+input[type="range"].aqua::-webkit-slider-thumb { border-color: var(--color-aqua); box-shadow: 0 0 0 4px rgba(79,224,205,0.15); }
+
+.opt-card {
+  transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+}
+.opt-card:hover { transform: translateY(-2px); border-color: #35507a; background: var(--color-raise); }
+.opt-card:active { transform: translateY(0px) scale(0.99); }
+.opt-card.selected {
+  border-color: rgba(255, 180, 84, 0.65);
+  background: linear-gradient(180deg, rgba(255,180,84,0.09), rgba(255,180,84,0.03));
+  box-shadow: 0 0 0 1px rgba(255,180,84,0.25), 0 10px 30px -12px rgba(255,180,84,0.25);
+}
+
+.btn-primary {
+  transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+  box-shadow: 0 6px 24px -8px rgba(255, 150, 60, 0.5), inset 0 1px 0 rgba(255,255,255,0.25);
+}
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 10px 30px -8px rgba(255, 150, 60, 0.65), inset 0 1px 0 rgba(255,255,255,0.25); }
+.btn-primary:active { transform: translateY(1px); }
+.btn-primary:disabled { opacity: 0.4; pointer-events: none; }
+
+.btn-ghost { transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease; }
+.btn-ghost:hover { border-color: #3a5079; background: rgba(111, 177, 255, 0.06); }
+
+.num-tick { font-variant-numeric: tabular-nums; }
+
+/* code panel */
+.code-scroll { font-variant-ligatures: none; }
+.code-scroll .ln { color: #3d5273; user-select: none; }
